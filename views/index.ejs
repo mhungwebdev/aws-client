@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>LMHUNG</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <div style="margin-bottom: 12px;">
+    <input id="fileupload" type="file" name="fileupload" />
+    <button id="upload-button" onclick="uploadFile()"> Upload </button>
+  </div>
+  
+  <table>
+    <tr>
+      <th>id</th>
+      <th>name</th>
+      <th>email</th>
+      <th>created_at</th>
+    </tr>
+
+    <% for (var i=0; i < data.length; i++) { %>
+      <tr>
+        <td>
+          <%= data[i].id %>
+        </td>
+        <td>
+          <%= data[i].name %>
+        </td>
+        <td>
+          <%= data[i].email %>
+        </td>
+        <td>
+          <%= data[i].created_at %>
+        </td>
+      </tr>
+      <% } %>
+  </table>
+
+  <script>
+    async function uploadFile() {
+      if (!fileupload.files[0]) {
+        return alert("No File Selected!")
+      }
+
+      let formData = new FormData();
+      formData.append("file", fileupload.files[0]);
+      const result = await fetch('/uploadfile', {
+        method: "POST",
+        body: formData
+      });
+      const body = await result.json()
+      console.log("upload result", body)
+
+      $("#mylist").append(`<li><a href="${body.url}">${body.url}</li>`);
+      alert('The file has been uploaded successfully. ');
+    }
+  </script>
+</body>
+
+</html>
